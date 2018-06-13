@@ -8,6 +8,7 @@ import {
     ViewContainerRef,
 } from "@angular/core";
 import { TabView, TabViewItem } from "tns-core-modules/ui/tab-view";
+import { TextTransform  } from "tns-core-modules/ui/text-base";
 
 import { InvisibleNode } from "../element-registry";
 import { rendererLog } from "../trace";
@@ -53,6 +54,7 @@ export class TabViewItemDirective implements OnInit {
     private item: TabViewItem;
     private _title: string;
     private _iconSource: string;
+    private _textTransform: TextTransform;
 
     constructor(
         private owner: TabViewDirective,
@@ -89,6 +91,20 @@ export class TabViewItemDirective implements OnInit {
         }
     }
 
+
+    @Input()
+    get textTransform() {
+        return this._textTransform;
+    }
+
+    set textTransform(value: TextTransform) {
+        if (this._textTransform && this._textTransform !== value) {
+            this._textTransform = value;
+            this.ensureItem();
+            this.item.textTransform = this._textTransform;
+        }
+    }
+
     private ensureItem() {
         if (!this.item) {
             this.item = new TabViewItem();
@@ -100,6 +116,13 @@ export class TabViewItemDirective implements OnInit {
         if (this.config) {
             this.item.title = this._title || this.config.title;
             this.item.iconSource = this._iconSource || this.config.iconSource;
+
+            //  TabViewItem textTransform has a default value for Android that kick in
+            // only if no value (even a null value) is set.
+            const textTransformValue = this._textTransform || this.config.textTransform;
+            if (textTransformValue) {
+                this.item.textTransform = textTransformValue;
+            }
         }
 
         const viewRef = this.viewContainer.createEmbeddedView(this.templateRef);
