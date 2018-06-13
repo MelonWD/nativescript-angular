@@ -1,5 +1,5 @@
 {
-  "name": "nativescript-angular",
+  "name": "@melonwd/nativescript-angular",
   "version": "6.0.0",
   "description": "An Angular renderer that lets you build mobile apps with NativeScript.",
   "homepage": "https://www.nativescript.org/",
